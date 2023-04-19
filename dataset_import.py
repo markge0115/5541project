@@ -11,7 +11,7 @@ with open ('nejm.train.en') as f:
   trainenstr += ' '.join(lines)
 
 trainzhstr = ""
-with open ('nejm.train.zh') as f:
+with open ('nejm.train.zh', encoding='utf-8') as f:
   lines = f.readlines()
   trainzhstr += ' '.join(lines)
 
@@ -21,7 +21,7 @@ with open ('nejm.test.en') as f:
   testenstr += ' '.join(lines)
 
 testzhstr = ""
-with open ('nejm.test.zh') as f:
+with open ('nejm.test.zh', encoding='utf-8') as f:
   lines = f.readlines()
   testzhstr += ' '.join(lines)
 
@@ -31,7 +31,7 @@ with open ('nejm.dev.en') as f:
   devenstr += ' '.join(lines)
 
 devzhstr = ""
-with open ('nejm.dev.zh') as f:
+with open ('nejm.dev.zh', encoding='utf-8') as f:
   lines = f.readlines()
   devzhstr += ' '.join(lines)
   
