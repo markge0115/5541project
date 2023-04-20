@@ -4,36 +4,20 @@ import nltk
 nltk.download('punkt')
 import jieba
 
+def read_into_str(filepath, encoding='utf-8'):
+  str = ""
+  with open(filepath, encoding=encoding) as f:
+    lines = f.readlines()
+    str += ' '.join(lines)
+  return str
+
 #importing the files as strings
-trainenstr = ""
-with open ('nejm.train.en') as f:
-  lines = f.readlines()
-  trainenstr += ' '.join(lines)
-
-trainzhstr = ""
-with open ('nejm.train.zh') as f:
-  lines = f.readlines()
-  trainzhstr += ' '.join(lines)
-
-testenstr = ""
-with open ('nejm.test.en') as f:
-  lines = f.readlines()
-  testenstr += ' '.join(lines)
-
-testzhstr = ""
-with open ('nejm.test.zh') as f:
-  lines = f.readlines()
-  testzhstr += ' '.join(lines)
-
-devenstr = ""
-with open ('nejm.dev.en') as f:
-  lines = f.readlines()
-  devenstr += ' '.join(lines)
-
-devzhstr = ""
-with open ('nejm.dev.zh') as f:
-  lines = f.readlines()
-  devzhstr += ' '.join(lines)
+trainenstr = read_into_str('nejm.train.en')
+trainzhstr = read_into_str('nejm.train.zh')
+testenstr = read_into_str('nejm.test.en')
+testzhstr = read_into_str('nejm.test.zh')
+devenstr = read_into_str('nejm.dev.en')
+devzhstr = read_into_str('nejm.dev.zh')
   
 #tokenizing in english then chinese
 tokenizedtrainen = nltk.word_tokenize(trainenstr)
