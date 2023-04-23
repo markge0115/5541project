@@ -5,13 +5,16 @@
 
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 from dataset_import import read_into_list, EN_FILENAMES
+import csv
+
+output_filepath = 'm2m100_translations_test.csv'
 
 def get_all_sentences(filepaths):
     """Return a list of all sentences from the specified filepaths using read_into_list()."""
     sentences = []
     for filepath in filepaths:
         sentences.extend(read_into_list(filepath))
-    return sentences
+    return sentences[:100]
 
 def translate(sentence, tokenizer, model, src_lang="en", tgt_lang="zh"):
     """Return a translation of sentence from one language to another using M2M100.
@@ -29,12 +32,24 @@ def translate(sentence, tokenizer, model, src_lang="en", tgt_lang="zh"):
     generated_tokens = model.generate(**input_tokens, forced_bos_token_id=tokenizer.get_lang_id(tgt_lang))
     return tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
 
+def writerow(row, filepath, mode='a'):
+    """Write a row to the csv at filepath with given mode (default "a" for append).
+    Inputs:
+        row: (list) a list of values to write as the row
+        filepath: (str) filepath of csv
+        mode: (str) write mode, e.g. 'a' for append or 'w' for write
+    """
+    with open(filepath, mode=mode, newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(row)
+
 model = M2M100ForConditionalGeneration.from_pretrained("facebook/m2m100_418M")
 tokenizer = M2M100Tokenizer.from_pretrained("facebook/m2m100_418M")
+
+writerow(['English', 'Chinese'], output_filepath, mode='w')
 
 sentences = get_all_sentences(EN_FILENAMES)
 
 for sentence in sentences:
     translation = translate(sentence, tokenizer, model)
-    pass
-
+    writerow([sentence, translation], output_filepath)
