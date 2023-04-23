@@ -15,10 +15,16 @@ def find_word_list(page_html):
     rows = word_list.find_all('li')
     for i in rows:
         definitions = i.find('a').text
-        tuple = definitions.split(' - ')
+        english, chinese = definitions.split(' - ')
+        # english = english.split(',')
+        english = re.split(',|，|;', english)
+        # chinese = chinese.split(',')
+        chinese = re.split(',|，|;', chinese)
         with open('medical_translations.csv', 'a', newline='', encoding='UTF-8') as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow([tuple[0], tuple[1]])
+            for i in english:
+                for j in chinese:
+                    writer.writerow([i, j])
     return 0
 
 def get_n_pages(url):
@@ -55,6 +61,6 @@ for classid in classids:
         url_ = url + classid_str + url_page_suffix + num
         with open('medical_translations.csv', 'a', newline='') as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow(['Page ' + num])
+            # writer.writerow(['Page ' + num])
         page_html = get_page_html(url_)
         find_word_list(page_html)
