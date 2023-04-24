@@ -7,9 +7,9 @@ import pandas as pd
 import csv
 import time
 from dictionary_metric import calculate_dictionary_accuracy
+from helpers import get_all_sentences
 from nltk.translate.bleu_score import sentence_bleu
-from dataset_import import ZH_FILENAMES
-from google_inference import get_all_sentences
+from dataset_import import EN_FILENAMES, ZH_FILENAMES
 
 GOOGLE = 'google_cloud_translation_v3'
 M2M = 'm2m100_418M'
@@ -49,14 +49,24 @@ def BLEU_score(dataframe, reference):
     for sentence in references:
         listofresults.append(sentence_bleu(sentence, listoftext))
     return listofresults
+
+def read_references():
+    src_sentences = get_all_sentences(EN_FILENAMES)
+    ref_sentences = get_all_sentences(ZH_FILENAMES)
+    references = {}
+    for src, ref in zip(src_sentences, ref_sentences):
+        references[src] = ref
+    return references
+
 dictionary = read_dictionary()
+references = read_references()
 
 calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary, return_terms=True)
+bleu = lambda x: sentence_bleu([references[x[0]]], x[1])
 
 for (name, path) in paths.items():
     df = pd.read_csv(path)
-    sentences = get_all_sentences(ZH_FILENAMES)
-    df['BLEU'] = BLEU_score(df['Chinese'], sentences)
+    df['BLEU'] = df.apply(bleu, axis=1) 
     df[['Dictionary Accuracy','Terms','Correct Terms']] = df.apply(calc_dict_acc, axis=1, result_type='expand')
     out_path = f'{name}_dict_acc.csv'
     df.to_csv(out_path)

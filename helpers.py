@@ -1,6 +1,16 @@
 # Helper functions
 # Keara Berlin 23 April 2023
 
+from dataset_import import read_into_list
+
+def get_all_sentences(filepaths):
+    """Return a list of all sentences from the specified filepaths using read_into_list()."""
+    sentences = []
+    for filepath in filepaths:
+        sentences.extend(read_into_list(filepath))
+    return sentences
+
+
 def lower_except_abbrev(string):
     """Make all characters in string lowercase, except words (surrounded by whitespace) that are all uppercase.
     This is meant to make case uniform but leave abbreviations like USA as uppercase."""

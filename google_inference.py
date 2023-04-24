@@ -3,6 +3,7 @@
 # Keara Berlin 22 April 2023
 
 from dataset_import import read_into_list, EN_FILENAMES
+from helpers import get_all_sentences
 import csv
 from google.cloud import translate
 from os import environ
@@ -12,13 +13,6 @@ assert PROJECT_ID
 PARENT = f"projects/{PROJECT_ID}"
 
 output_filepath = 'google_translations.csv'
-
-def get_all_sentences(filepaths):
-    """Return a list of all sentences from the specified filepaths using read_into_list()."""
-    sentences = []
-    for filepath in filepaths:
-        sentences.extend(read_into_list(filepath))
-    return sentences
 
 def get_str_between_quotes(string):
     """Return the portion of the string between two quotation marks ("). 
