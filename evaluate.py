@@ -36,6 +36,15 @@ def read_dictionary(path='medical_translations_clean.csv'):
 
     return dictionary
 
+def BLEU_score(filepath, reference, language):
+    ref = reference[language].tolist()
+    listoftext = []
+    with open(filepath, r) as csvfile:
+        text = csv.reader(csvfile, delimiter=',')
+        for row in text:
+            listoftext.append(row)
+    return sentence_bleu(ref, listoftext)
+
 dictionary = read_dictionary()
 
 calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary, return_terms=True)
