@@ -2,6 +2,7 @@
 # Keara Berlin
 # 18 April 2023
 
+import time
 from helpers import lower_except_abbrev, any_in
 
 def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict, return_terms=False):
@@ -17,14 +18,22 @@ def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict, return_terms
         (float) the dictionary accuracy of tgt_sentence
     """
     correct_terms = []
+    tic = time.perf_counter()
     terms = get_terms(src_sentence, dict)
+    toc = time.perf_counter()
+    print(f"get terms: {toc-tic:0.4f}s")
+
     if len(terms) > 0:
         pass
+
+    # tic = time.perf_counter()
     for term in terms:
 
         translations = dict[term]
         if any_in(translations, tgt_sentence, split=False):
             correct_terms.append(term)
+    # toc = time.perf_counter()
+    # print(f'get correct terms: {toc-tic:0.4f}s')
 
     if len(terms) == 0:
         acc = None
@@ -70,19 +79,32 @@ def get_terms(sentence, dict, split=True):
     Output: 
         (list of strs) the terms from dict that were in sentence
     """
+    # tic = time.perf_counter()
     sentence = lower_except_abbrev(sentence)
+    # toc = time.perf_counter()
+    # print(f"lower: {toc-tic:0.4}s")
+
+    # tic = time.perf_counter()
     sentence_words = sentence.split()
+    # toc = time.perf_counter()
+    # print(f"sentence split: {toc-tic:0.4}s")
 
     sentence_terms = []
+    # times = 0
     for term in dict.keys():
-        term_words = term.split()
+        if not (term in sentence):
+            continue 
 
-        if ((split and is_sublist(term_words, sentence_words)) \
-                or (not split and term in sentence)) \
+        # tic = time.perf_counter()
+        if ((not split) or (split and is_sublist(term.split(), sentence_words))) \
             and not is_subterm(term, sentence_terms):
 
             sentence_terms.append(term)
+    #     toc = time.perf_counter()
+    #     times += toc-tic
 
+    # print(f"avg is sub: {times/len(dict.keys()):0.4}s")
+        
     return sentence_terms
 
 def is_subterm(term, terms):

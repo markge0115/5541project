@@ -5,6 +5,7 @@
 
 import pandas as pd
 import csv
+import time
 from dictionary_metric import calculate_dictionary_accuracy
 
 GOOGLE = 'google_cloud_translation_v3'
@@ -12,8 +13,8 @@ M2M = 'm2m100_418M'
 CHATGPT = 'chat_gpt'
 
 paths = {
-    GOOGLE: 'google_translations.csv',
-    M2M: 'm2m100_translations_test.csv', # TODO change to final path when ready
+    # GOOGLE: 'google_translations.csv',
+    M2M: 'm2m100_translations.csv',
     # CHATGPT:'' # TODO
 }
 
