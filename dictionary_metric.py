@@ -4,17 +4,19 @@
 
 from helpers import lower_except_abbrev
 
-def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict):
+def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict, return_terms=False):
     """Returns the dictionary accuracy of the given target language sentence.
     Inputs:
         src_sentence (str): the untokenized source language sentence
         tgt_sentence (str): the untokenized target language sentence (translated src_sentence)
         dict (dict): dictionary where each key is a source language term and each value is a list of the possible target language translations
+        return_terms (bool): default False. If True, returns (acc, terms, correct_terms) instead of just acc
+                            where terms are the terms in the src_sentence and 
+                            correct_terms are the corresponding target language terms from the dictionary which
+                            are in tgt_sentence.
         (float) the dictionary accuracy of tgt_sentence
     """
     correct_terms = []
-    # TODO we need some form of tokenization for English even if it's just split because lmao "sea" isn't in the sentence
-    # just because "disease" is in the sentence
     terms = get_terms(src_sentence, dict)
     if len(terms) > 0:
         pass
@@ -28,7 +30,11 @@ def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict):
         acc = None
     else:
         acc = len(correct_terms) / len(terms)
-    return acc
+
+    if return_terms:
+        return (acc, terms, correct_terms)
+    else:
+        return acc
 
 def corpus_level_dictionary_accuracy(sentences, dict):
     """Weighted average of dictionary accuracies, weighted by # of dictionary terms in sentence.
@@ -70,7 +76,7 @@ def get_terms(sentence, dict, split=True):
     sentence_terms = []
     for term in dict.keys():
         term_words = term.split()
-        
+
         if ((split and is_sublist(term_words, sentence_words)) \
                 or (not split and term in sentence)) \
             and not is_subterm(term, sentence_terms):

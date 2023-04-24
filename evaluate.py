@@ -16,7 +16,7 @@ CHATGPT = 'chat_gpt'
 paths = {
     GOOGLE: 'google_translations.csv',
     M2M: 'm2m100_translations_test.csv', # TODO change to final path when ready
-    CHATGPT:'' # TODO
+    # CHATGPT:'' # TODO
 }
 
 def read_dictionary(path='medical_translations.csv'):
@@ -40,10 +40,11 @@ def read_dictionary(path='medical_translations.csv'):
 
 dictionary = read_dictionary()
 
-calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary)
+calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary, return_terms=True)
 
 for (name, path) in paths.items():
     df = pd.read_csv(path)
-    df['Dictionary Accuracy'] = df.apply(calc_dict_acc, axis=1)
-    pass
+    df[['Dictionary Accuracy','Terms','Correct Terms']] = df.apply(calc_dict_acc, axis=1, result_type='expand')
+    out_path = f'{name}_dict_acc.csv'
+    df.to_csv(out_path)
 
