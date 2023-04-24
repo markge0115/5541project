@@ -6,6 +6,7 @@
 import pandas as pd
 import csv
 from dictionary_metric import calculate_dictionary_accuracy
+from nltk.translate.bleu_score import sentence_bleu
 
 GOOGLE = 'google_cloud_translation_v3'
 M2M = 'm2m100_418M'
@@ -36,6 +37,10 @@ def read_dictionary(path='medical_translations_clean.csv'):
 
     return dictionary
 
+#Parameters:
+#   filepath: filename of a csv file, ie "output.csv"
+#   reference: dataframe used, ie the paramedtest dataframe
+#   language: either 'en' or 'zh' for which ever language we translated to
 def BLEU_score(filepath, reference, language):
     ref = reference[language].tolist()
     listoftext = []
