@@ -4,9 +4,7 @@
 # Keara Berlin 23 April 2023
 
 import pandas as pd
-import numpy as np
 import csv
-from helpers import lower_except_abbrev
 from dictionary_metric import calculate_dictionary_accuracy
 
 GOOGLE = 'google_cloud_translation_v3'
@@ -19,7 +17,7 @@ paths = {
     # CHATGPT:'' # TODO
 }
 
-def read_dictionary(path='medical_translations.csv'):
+def read_dictionary(path='medical_translations_clean.csv'):
     """Read a dictionary csv file with two columns, keys and values, into a Python dictionary object."""
     dictionary = dict()
     with open(path, newline='', encoding='utf-8') as csvfile:
@@ -27,8 +25,8 @@ def read_dictionary(path='medical_translations.csv'):
         next(reader) # skip header row
 
         for row in reader:
-            key = lower_except_abbrev(row[0].strip())
-            value = lower_except_abbrev(row[1].strip())
+            key = row[0]
+            value = row[1]
             if key in dictionary.keys():
                 dictionary[key].append(value)
             else:

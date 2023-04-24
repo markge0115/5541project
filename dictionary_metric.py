@@ -2,7 +2,7 @@
 # Keara Berlin
 # 18 April 2023
 
-from helpers import lower_except_abbrev
+from helpers import lower_except_abbrev, any_in
 
 def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict, return_terms=False):
     """Returns the dictionary accuracy of the given target language sentence.
@@ -102,26 +102,3 @@ def is_sublist(sublist, superlist):
         if superlist[idx: idx + len(sublist)] == sublist:
             return True
     return False
-
-def any_in(terms, sentence, split=True):
-    """Returns whether at least one term in terms can be found in sentence.
-    Inputs:
-        terms (list of strs): list of terms to check
-        sentence (str): sentence to be checked for terms
-        split (bool): default True. If True, split term and sentence by whitespace and check if the term 
-                        is a sublist of the sentence.
-    Output: (bool)
-    """
-    if split:
-        sentence_words = sentence.split()
-        for term in terms:
-            term_words = term.split()
-            if is_sublist(term_words, sentence_words):
-                return True 
-        return False
-    
-    else:
-        for term in terms:
-            if term in sentence:
-                return True
-        return False
