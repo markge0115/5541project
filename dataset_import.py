@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import nltk
 nltk.download('punkt')
-import jieba
+#import jieba
 
 EN_FILENAMES = ['nejm.train.en', 'nejm.test.en', 'nejm.dev.en']
 ZH_FILENAMES = ['nejm.train.zh', 'nejm.test.zh', 'nejm.dev.zh']
@@ -16,7 +16,7 @@ def read_into_str(filepath, encoding='utf-8'):
 
 def read_into_list(filepath, encoding='utf-8', known_only=True):
   """Read the given monolingual file into a list of strings (sentences).
-  Inputs: 
+  Inputs:
     filepath (str): path to the file to read
     encoding (str): encoding to use to read the file
     known_only (bool): if true, only returns sentences with only known words (no @-@)
@@ -24,7 +24,7 @@ def read_into_list(filepath, encoding='utf-8', known_only=True):
   """
   with open(filepath, encoding=encoding) as f:
     sentences = f.read().splitlines()
-  
+
   UNK = '@-@'
   if known_only:
     sentences = [s for s in sentences if UNK not in s]
@@ -46,7 +46,7 @@ def read_into_list(filepath, encoding='utf-8', known_only=True):
 # testzhstr = read_into_str('nejm.test.zh')
 # devenstr = read_into_str('nejm.dev.en')
 # devzhstr = read_into_str('nejm.dev.zh')
-  
+
 # #tokenizing in english then chinese
 # tokenizedtrainen = nltk.word_tokenize(trainenstr)
 # tokenizedtesten = nltk.word_tokenize(testenstr)
