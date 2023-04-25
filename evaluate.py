@@ -13,9 +13,9 @@ from nltk.translate.bleu_score import sentence_bleu
 from dataset_import import EN_FILENAMES, ZH_FILENAMES
 
 paths = {
-    GOOGLE: 'google_translations.csv',
-    M2M: 'm2m100_translations.csv',
-    # CHATGPT:'' # TODO
+    # GOOGLE: 'google_translations.csv',
+    # M2M: 'm2m100_translations.csv',
+    CHATGPT: 'gpt_translations.csv'
 }
 
 def read_dictionary(path='medical_translations_clean.csv'):
