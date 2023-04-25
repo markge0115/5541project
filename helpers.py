@@ -2,6 +2,18 @@
 # Keara Berlin 23 April 2023
 
 from dataset_import import read_into_list
+import csv
+
+def writerow(row, filepath, mode='a'):
+    """Write a row to the csv at filepath with given mode (default "a" for append).
+    Inputs:
+        row: (list) a list of values to write as the row
+        filepath: (str) filepath of csv
+        mode: (str) write mode, e.g. 'a' for append or 'w' for write
+    """
+    with open(filepath, mode=mode, newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(row)
 
 def get_all_sentences(filepaths):
     """Return a list of all sentences from the specified filepaths using read_into_list()."""
