@@ -8,16 +8,12 @@ import numpy as np
 import csv
 import time
 from dictionary_metric import calculate_dictionary_accuracy
-from helpers import get_all_sentences, writerow
+from helpers import *
 from nltk.translate.bleu_score import sentence_bleu
 from dataset_import import EN_FILENAMES, ZH_FILENAMES
 
-GOOGLE = 'google_cloud_translation_v3'
-M2M = 'm2m100_418M'
-CHATGPT = 'chat_gpt'
-
 paths = {
-    # GOOGLE: 'google_translations.csv',
+    GOOGLE: 'google_translations.csv',
     M2M: 'm2m100_translations.csv',
     # CHATGPT:'' # TODO
 }
@@ -68,19 +64,6 @@ calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary, 
 for (name, path) in paths.items():
     df = pd.read_csv(path)
     small = df.iloc[:3382,:]
-    # numpy = df.to_numpy()
-    
-    # out_path = f'{name}_dict_acc.csv'
-    # header = ['English', 'Chinese', 'Dict Acc', 'Terms', 'Correct Terms']
-    # writerow(header, out_path, mode='w')
-
-    # for i, row in np.ndenumerate(numpy):
-    #     (acc, terms, correct_terms) = calculate_dictionary_accuracy(row[0], row[1][2:-2], dictionary, return_terms=True)
-    #     out_row = [row[0], row[1], acc, terms, correct_terms]
-    #     writerow(row, out_path)
-
-    #     if i%100 == 0:
-    #         print(f"{i/numpy.size*100:0.0f}% done")
 
     # df['BLEU'] = df.apply(bleu, axis=1) 
     small[['Dictionary Accuracy','Terms','Correct Terms']] = small.apply(calc_dict_acc, axis=1, result_type='expand')

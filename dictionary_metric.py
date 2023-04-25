@@ -3,7 +3,7 @@
 # 18 April 2023
 
 import time
-from helpers import lower_except_abbrev, any_in
+from helpers import lower_except_abbrev, any_in, is_sublist
 
 def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict, return_terms=False):
     """Returns the dictionary accuracy of the given target language sentence.
@@ -96,16 +96,20 @@ def get_terms(sentence, dict, split=True):
             continue 
 
         # tic = time.perf_counter()
-        if ((not split) or (split and is_sublist(term.split(), sentence_words))) \
-            and not is_subterm(term, sentence_terms):
-
+        if (not split) or (split and is_sublist(term.split(), sentence_words)):
             sentence_terms.append(term)
     #     toc = time.perf_counter()
     #     times += toc-tic
 
     # print(f"avg is sub: {times/len(dict.keys()):0.4}s")
+
+    final_sentence_terms = []
+    for i, term in enumerate(sentence_terms):
+        other_terms = sentence_terms[:i] + sentence_terms[i+1:]
+        if not is_subterm(term, other_terms):
+            final_sentence_terms.append(term)
         
-    return sentence_terms
+    return final_sentence_terms
 
 def is_subterm(term, terms):
     """Returns whether term is a subterm of (can be found verbatim within) any term in terms.
@@ -116,11 +120,5 @@ def is_subterm(term, terms):
     """ 
     for t in terms:
         if term in t:
-            return True
-    return False
-
-def is_sublist(sublist, superlist):
-    for idx in range(len(superlist) - len(sublist) + 1):
-        if superlist[idx: idx + len(sublist)] == sublist:
             return True
     return False

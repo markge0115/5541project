@@ -4,6 +4,10 @@
 from dataset_import import read_into_list
 import csv
 
+GOOGLE = 'google_cloud_translation_v3'
+M2M = 'm2m100_418M'
+CHATGPT = 'chat_gpt'
+
 def writerow(row, filepath, mode='a'):
     """Write a row to the csv at filepath with given mode (default "a" for append).
     Inputs:
@@ -34,6 +38,12 @@ def lower_except_abbrev(string):
         else:
             lowered_words.append(word.lower())
     return " ".join(lowered_words)
+
+def is_sublist(sublist, superlist):
+    for idx in range(len(superlist) - len(sublist) + 1):
+        if superlist[idx: idx + len(sublist)] == sublist:
+            return True
+    return False
 
 def any_in(terms, sentence, split=True):
     """Returns whether at least one term in terms can be found in sentence.
