@@ -3,7 +3,7 @@
 # Keara Berlin 22 April 2023
 
 from dataset_import import read_into_list, EN_FILENAMES
-from helpers import get_all_sentences
+from helpers import get_all_sentences, writerow
 import csv
 from google.cloud import translate
 from os import environ
@@ -56,17 +56,6 @@ def google_translate(sentence, src_lang="en-US", tgt_lang="zh", project_id="nlp-
     #     print("Translated text: {}".format(translation.translated_text))
 
     return response.translations[0].translated_text
-
-def writerow(row, filepath, mode='a'):
-    """Write a row to the csv at filepath with given mode (default "a" for append).
-    Inputs:
-        row: (list) a list of values to write as the row
-        filepath: (str) filepath of csv
-        mode: (str) write mode, e.g. 'a' for append or 'w' for write
-    """
-    with open(filepath, mode=mode, newline='', encoding='utf-8') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(row)
 
 writerow(['English', 'Chinese'], output_filepath, mode='w')
 

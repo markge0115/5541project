@@ -18,10 +18,10 @@ def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict, return_terms
         (float) the dictionary accuracy of tgt_sentence
     """
     correct_terms = []
-    tic = time.perf_counter()
+    # tic = time.perf_counter()
     terms = get_terms(src_sentence, dict)
-    toc = time.perf_counter()
-    print(f"get terms: {toc-tic:0.4f}s")
+    # toc = time.perf_counter()
+    # print(f"get terms: {toc-tic:0.4f}s")
 
     if len(terms) > 0:
         pass
