@@ -63,6 +63,18 @@ calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary, 
 
 for (name, path) in paths.items():
     df = pd.read_csv(path)
+    ref = list(references.values())
+    tokenizedref = []
+    for i in ref:
+        tokenizedref.append(jieba.lcut(i))
+    data = df['Chinese'].values.tolist()
+    tokenizeddata = []
+    for i in data:
+        tokenizeddata.append(jieba.lcut(i))
+    tokendata = []
+    for i in tokenizeddata:
+        tokendata += i
+    print(sentence_bleu(tokenizedref, tokendata))
     small = df.iloc[:3382,:]
 
     # df['BLEU'] = df.apply(bleu, axis=1) 
