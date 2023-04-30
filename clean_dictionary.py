@@ -5,8 +5,8 @@ import re
 import csv
 from helpers import lower_except_abbrev, any_in
 
-input_path = 'medical_translations.csv'
-output_path = 'medical_translations_clean.csv'
+input_path = 'data/medical_translations.csv'
+output_path = 'data/medical_translations_clean.csv'
 
 with open(output_path, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)

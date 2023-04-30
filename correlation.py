@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 from helpers import GOOGLE, M2M, CHATGPT
 
 input_paths = {
-    GOOGLE: f'{GOOGLE}_dict_acc.csv',
-    M2M: f'{M2M}_dict_acc.csv',
-    CHATGPT: f'{CHATGPT}_dict_acc.csv'
+    GOOGLE: f'output/{GOOGLE}_dict_acc.csv',
+    M2M: f'output/{M2M}_dict_acc.csv',
+    CHATGPT: f'output/{CHATGPT}_dict_acc.csv'
 }
 
 def get_col_map(name):
@@ -40,9 +40,9 @@ google_df = get_df(GOOGLE, "Google")
 m2m_df = get_df(M2M, "M2M")
 gpt_df = get_df(CHATGPT, "GPT")
 
-google_eval = get_eval_df('google_translations_evaluation.csv', "Google", False)
-m2m_eval = get_eval_df('m2m100_translations_evaluation.csv', "M2M", True)
-gpt_eval = get_eval_df('gpt_translations_evaluation.csv', "GPT", False)
+google_eval = get_eval_df('evals/google_translations_evaluation.csv', "Google", False)
+m2m_eval = get_eval_df('evals/m2m100_translations_evaluation.csv', "M2M", True)
+gpt_eval = get_eval_df('evals/gpt_translations_evaluation.csv', "GPT", False)
 
 def merge(df1, df2):
     return df1.merge(df2, how="inner", left_on=['English'], right_on=['English'])
@@ -66,7 +66,7 @@ def plot_pearson(col1, col2, name, aspect, ymax=10.5):
     plt.ylabel(col2)
     plt.ylim((0,ymax))
     plt.title(f"{name} {aspect} R={pearson.statistic:0.4f} p={pearson.pvalue:0.4f}")
-    plt.savefig(f'{col1}_vs_{col2}.png', dpi=600)
+    plt.savefig(f'plots/{col1}_vs_{col2}.png', dpi=600)
     plt.show()
     plt.close()
 

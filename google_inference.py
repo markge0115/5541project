@@ -12,7 +12,7 @@ PROJECT_ID = environ.get("PROJECT_ID", "")
 assert PROJECT_ID
 PARENT = f"projects/{PROJECT_ID}"
 
-output_filepath = 'google_translations.csv'
+output_filepath = 'output/google_translations.csv'
 
 def get_str_between_quotes(string):
     """Return the portion of the string between two quotation marks ("). 

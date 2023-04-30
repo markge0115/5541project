@@ -7,7 +7,7 @@ from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 from dataset_import import read_into_list, EN_FILENAMES
 import csv
 
-output_filepath = 'm2m100_translations_test.csv'
+output_filepath = 'output/m2m100_translations_test.csv'
 
 def get_all_sentences(filepaths):
     """Return a list of all sentences from the specified filepaths using read_into_list()."""

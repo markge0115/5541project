@@ -4,8 +4,8 @@ import nltk
 nltk.download('punkt')
 #import jieba
 
-EN_FILENAMES = ['nejm.train.en', 'nejm.test.en', 'nejm.dev.en']
-ZH_FILENAMES = ['nejm.train.zh', 'nejm.test.zh', 'nejm.dev.zh']
+EN_FILENAMES = ['data/nejm.train.en', 'data/nejm.test.en', 'data/nejm.dev.en']
+ZH_FILENAMES = ['data/nejm.train.zh', 'data/nejm.test.zh', 'data/nejm.dev.zh']
 
 def read_into_str(filepath, encoding='utf-8'):
   str = ""
@@ -30,6 +30,17 @@ def read_into_list(filepath, encoding='utf-8', known_only=True):
     sentences = [s for s in sentences if UNK not in s]
 
   return sentences
+
+# look at sentence pairs
+f_en = open('data/nejm.train.en', encoding='utf-8')
+lines_en = list(f_en.readlines())
+f_zh = open('data/nejm.train.zh', encoding='utf-8')
+lines_zh = list(f_zh.readlines())
+for i, (en, zh) in enumerate(zip(lines_en, lines_zh)):
+  if i % 100 == 0:
+    print(f"En: {en}")
+    print(f"Zh: {zh}")
+    print("\n")
 
 #importing the files as lists of sentences
 # trainen_list = read_into_list('nejm.train.en')

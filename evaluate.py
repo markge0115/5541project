@@ -13,12 +13,12 @@ from nltk.translate.bleu_score import sentence_bleu
 from dataset_import import EN_FILENAMES, ZH_FILENAMES
 
 paths = {
-    # GOOGLE: 'google_translations.csv',
-    # M2M: 'm2m100_translations.csv',
-    CHATGPT: 'gpt_translations.csv'
+    GOOGLE: 'output/google_translations.csv',
+    M2M: 'output/m2m100_translations.csv',
+    CHATGPT: 'output/gpt_translations.csv'
 }
 
-def read_dictionary(path='medical_translations_clean.csv'):
+def read_dictionary(path='data/medical_translations_clean.csv'):
     """Read a dictionary csv file with two columns, keys and values, into a Python dictionary object."""
     dictionary = dict()
     with open(path, newline='', encoding='utf-8') as csvfile:
@@ -67,5 +67,5 @@ for (name, path) in paths.items():
 
     # df['BLEU'] = df.apply(bleu, axis=1) 
     small[['Dictionary Accuracy','Terms','Correct Terms']] = small.apply(calc_dict_acc, axis=1, result_type='expand')
-    out_path = f'{name}_dict_acc.csv'
+    out_path = f'output/{name}_dict_acc.csv'
     small.to_csv(out_path)

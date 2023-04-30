@@ -20,7 +20,7 @@ def find_word_list(page_html):
         english = re.split(',|，|;', english)
         # chinese = chinese.split(',')
         chinese = re.split(',|，|;', chinese)
-        with open('medical_translations.csv', 'a', newline='', encoding='UTF-8') as csvfile:
+        with open('data/medical_translations.csv', 'a', newline='', encoding='UTF-8') as csvfile:
             writer = csv.writer(csvfile)
             for i in english:
                 for j in chinese:
@@ -47,7 +47,7 @@ classids = [1,2,4,5,6,7,8,9,
             121,133]
 url_page_suffix = "&page="
 
-with open('medical_translations.csv', 'w', newline='') as csvfile:
+with open('data/medical_translations.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['English', 'Chinese'])
 
@@ -59,7 +59,7 @@ for classid in classids:
     for i in range(n_pages):
         num = str(i+1)
         url_ = url + classid_str + url_page_suffix + num
-        with open('medical_translations.csv', 'a', newline='') as csvfile:
+        with open('data/medical_translations.csv', 'a', newline='') as csvfile:
             writer = csv.writer(csvfile)
             # writer.writerow(['Page ' + num])
         page_html = get_page_html(url_)

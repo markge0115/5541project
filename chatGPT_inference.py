@@ -7,7 +7,7 @@ from os import environ
 import openai
 import re
 openai.api_key = "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"
-output_filepath = "gpt_translations.csv"
+output_filepath = "output/gpt_translations.csv"
 
 def get_all_sentences(filepaths):
     """Return a list of all sentences from the specified filepaths using read_into_list()."""
