@@ -3,9 +3,7 @@ import numpy as np
 import nltk
 nltk.download('punkt')
 #import jieba
-
-EN_FILENAMES = ['data/nejm.train.en', 'data/nejm.test.en', 'data/nejm.dev.en']
-ZH_FILENAMES = ['data/nejm.train.zh', 'data/nejm.test.zh', 'data/nejm.dev.zh']
+from helpers import read_into_list, EN_FILENAMES, ZH_FILENAMES
 
 def read_into_str(filepath, encoding='utf-8'):
   str = ""
@@ -13,23 +11,6 @@ def read_into_str(filepath, encoding='utf-8'):
     lines = f.readlines()
     str += ' '.join(lines)
   return str
-
-def read_into_list(filepath, encoding='utf-8', known_only=True):
-  """Read the given monolingual file into a list of strings (sentences).
-  Inputs:
-    filepath (str): path to the file to read
-    encoding (str): encoding to use to read the file
-    known_only (bool): if true, only returns sentences with only known words (no @-@)
-  Output: (list of strs) list of sentences
-  """
-  with open(filepath, encoding=encoding) as f:
-    sentences = f.read().splitlines()
-
-  UNK = '@-@'
-  if known_only:
-    sentences = [s for s in sentences if UNK not in s]
-
-  return sentences
 
 # look at sentence pairs
 f_en = open('data/nejm.train.en', encoding='utf-8')

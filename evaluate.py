@@ -1,20 +1,20 @@
 # Perform automatic metric evaluation on translations of ParaMed sentences from English to Chinese 
 # with M2M100, Google Translate, and ChatGPT.
-# Metrics calculated: dictionary accuracy, BLEU, COMET.
-# Keara Berlin 23 April 2023
+# Metrics calculated: dictionary accuracy, BLEU.
+# Keara Berlin, Kim Welch - 23 April 2023
 
 import pandas as pd
 import numpy as np
 import csv
-import time
+import jieba
+import re
 from dictionary_metric import calculate_dictionary_accuracy
 from helpers import *
-from nltk.translate.bleu_score import sentence_bleu
-from dataset_import import EN_FILENAMES, ZH_FILENAMES
+from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 paths = {
-    GOOGLE: 'output/google_translations.csv',
-    M2M: 'output/m2m100_translations.csv',
+    # GOOGLE: 'output/google_translations.csv',
+    # M2M: 'output/m2m100_translations.csv',
     CHATGPT: 'output/gpt_translations.csv'
 }
 
@@ -48,36 +48,65 @@ def BLEU_score(dataframe, reference):
     return listofresults
 
 def read_references():
-    src_sentences = get_all_sentences(EN_FILENAMES)
-    ref_sentences = get_all_sentences(ZH_FILENAMES)
-    references = {}
-    for src, ref in zip(src_sentences, ref_sentences):
-        references[src] = ref
-    return references
+    """Read in source language sentences and reference translations as a two-column pandas dataframe."""
+    src_sentences = get_all_sentences(EN_FILENAMES, known_only=False)
+    ref_sentences = get_all_sentences(ZH_FILENAMES, known_only=False)
+    ref_df = pd.DataFrame([src_sentences, ref_sentences]).transpose()
+    ref_df.columns = ["English", "Reference"]
+    return ref_df
+
+def tokenize_sentences(sentences):
+    """Tokenize the list of Chinese sentences with jieba."""
+    tokenized = []
+    for sentence in sentences:
+        tokenized.append(jieba.lcut(sentence))
+    return tokenized
+
+def tokenize(sentence):
+    """Tokenize the sentence string with jieba and remove any whitespace tokens."""
+    tokenized = jieba.lcut(sentence)
+    cleaned = [t for t in tokenized if t.strip() != '']
+    return cleaned
+
+def bleu(row):
+    """Calculate BLEU score for one row of a pandas dataframe, with columns 
+        ['English','Chinese','Reference'] where the English is the source sentence,
+        Chinese is the machine translated sentence, and Reference is the reference translation."""
+    tokenized_hypothesis = tokenize(row['Chinese'])
+    tokenized_reference = tokenize(row['Reference'])
+    smooth_fn = SmoothingFunction()
+    bleu_score = sentence_bleu([tokenized_reference], 
+                               tokenized_hypothesis,
+                               smoothing_function=smooth_fn.method7)
+    return bleu_score
+
+def clean_translation(row):
+    """Clean the Chinese translation output in one row of a pandas dataframe, so that only
+    the Chinese translation and not any prepended copy of the source language sentence is included.
+        Dataframe columns = ['English','Chinese','Reference'] where English is the source sentence,
+        Chinese is the machine translated sentence, and Reference is the reference translation."""
+
+    translation = row['Chinese']
+    parts = re.split('中文：|Chinese:', translation)
+    return parts[-1].strip()
 
 dictionary = read_dictionary()
-# references = read_references()
+references = read_references()
 
+# x will be a row of a pandas df of the form [src_sentence, hypothesis, reference]
 calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary, return_terms=True)
-# bleu = lambda x: sentence_bleu([references[x[0]]], x[1])
 
 for (name, path) in paths.items():
     df = pd.read_csv(path)
-    ref = list(references.values())
-    tokenizedref = []
-    for i in ref:
-        tokenizedref.append(jieba.lcut(i))
-    data = df['Chinese'].values.tolist()
-    tokenizeddata = []
-    for i in data:
-        tokenizeddata.append(jieba.lcut(i))
-    tokendata = []
-    for i in tokenizeddata:
-        tokendata += i
-    print(sentence_bleu(tokenizedref, tokendata))
     small = df.iloc[:3382,:]
 
-    # df['BLEU'] = df.apply(bleu, axis=1) 
+    if name == CHATGPT:
+        small['Chinese'] = small.apply(clean_translation, axis=1)
+
+    small = small.merge(references, on=["English"])
+
+    small['BLEU'] = small.apply(bleu, axis=1) 
     small[['Dictionary Accuracy','Terms','Correct Terms']] = small.apply(calc_dict_acc, axis=1, result_type='expand')
-    out_path = f'output/{name}_dict_acc.csv'
+   
+    out_path = f'output/{name}_dict_acc_bleu.csv'
     small.to_csv(out_path)

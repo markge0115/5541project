@@ -3,7 +3,7 @@
 
 import re
 import csv
-from helpers import lower_except_abbrev, any_in
+from helpers import lower_except_abbrev, any_in, is_chinese
 
 input_path = 'data/medical_translations.csv'
 output_path = 'data/medical_translations_clean.csv'
@@ -11,12 +11,6 @@ output_path = 'data/medical_translations_clean.csv'
 with open(output_path, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['English', 'Chinese'])
-
-def is_chinese(string):
-    """Return whether the string contains any Chinese characters.
-    Modified from https://stackoverflow.com/questions/2718196/find-all-chinese-text-in-a-string-using-python-and-regex"""
-    chinese_substrings = re.findall(r'[\u4e00-\u9fff]+', string)
-    return len(chinese_substrings) > 0
 
 def split_on_parentheses(strings, mode='synonym'):
     """Split the list of strings further on parentheses.
