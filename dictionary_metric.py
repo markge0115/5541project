@@ -5,6 +5,58 @@
 import time
 from helpers import lower_except_abbrev, any_in, is_sublist
 
+# def delete_element(ls, element):
+#     """Return a version of a list ls without the first instance of element. 
+#     Returns ls if element is not in ls."""
+#     if element in ls:
+#         ls.remove(element)
+#     return ls
+
+def term_recall(tgt_terms, tgt_sentence, use_chars):
+    """Calculate recall between the words / characters in the term and the words/characters
+    in the target language sentence. If use_chars is true, evaluate on characters, not words.
+    tgt_terms is a list because there can be more than one possible translation of one source
+    language term. Return only the max recall out of all tgt_terms."""
+    if use_chars:
+        sentence_substrs = list(tgt_sentence)
+    else:
+        sentence_substrs = tgt_sentence.split()
+    
+    max_recall = 0
+    for term in tgt_terms:
+        
+        if use_chars:
+            term_substrs = list(term)
+        else:
+            term_substrs = term.split()
+
+        sum = 0
+        for substr in term_substrs:
+            if substr in sentence_substrs:
+                sum += 1
+        recall = sum / len(term_substrs)
+
+        if recall > max_recall:
+            max_recall = recall
+        if max_recall >= 1:
+            break
+
+    return max_recall
+
+def calculate_dictionary_recall(src_sentence, tgt_sentence, dict, use_chars=True):
+    """Calculate dictionary recall of the given target language sentence, i.e.
+    the average recall of words/characters in the target language term compared to 
+    words/characters in the translated target language sentence.
+    If there is more than one possible translated term, use only the max recall."""
+    terms = get_terms(src_sentence, dict)
+    if len(terms) == 0:
+        return None
+    sum_recall = 0
+    for term in terms:
+        translations = dict[term]
+        sum_recall += term_recall(translations, tgt_sentence, use_chars=use_chars)
+    return sum_recall / len(terms)
+
 def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict, return_terms=False):
     """Returns the dictionary accuracy of the given target language sentence.
     Inputs:
@@ -18,15 +70,7 @@ def calculate_dictionary_accuracy(src_sentence, tgt_sentence, dict, return_terms
         (float) the dictionary accuracy of tgt_sentence
     """
     correct_terms = []
-    # tic = time.perf_counter()
     terms = get_terms(src_sentence, dict)
-    # toc = time.perf_counter()
-    # print(f"get terms: {toc-tic:0.4f}s")
-
-    if len(terms) > 0:
-        pass
-
-    # tic = time.perf_counter()
     for term in terms:
 
         translations = dict[term]

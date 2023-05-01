@@ -8,7 +8,7 @@ import numpy as np
 import csv
 import jieba
 import re
-from dictionary_metric import calculate_dictionary_accuracy
+from dictionary_metric import calculate_dictionary_accuracy, calculate_dictionary_recall
 from helpers import *
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
@@ -94,7 +94,8 @@ dictionary = read_dictionary()
 references = read_references()
 
 # x will be a row of a pandas df of the form [src_sentence, hypothesis, reference]
-calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary, return_terms=True)
+# calc_dict_acc = lambda x: calculate_dictionary_accuracy(x[0], x[1], dictionary, return_terms=True)
+calc_dict_acc = lambda x: calculate_dictionary_recall(x[0], x[1], dictionary)
 
 for (name, path) in paths.items():
     df = pd.read_csv(path)
@@ -106,7 +107,8 @@ for (name, path) in paths.items():
     small = small.merge(references, on=["English"])
 
     small['BLEU'] = small.apply(bleu, axis=1) 
-    small[['Dictionary Accuracy','Terms','Correct Terms']] = small.apply(calc_dict_acc, axis=1, result_type='expand')
-   
-    out_path = f'output/{name}_dict_acc_bleu.csv'
+    # small[['Dictionary Accuracy','Terms','Correct Terms']] = small.apply(calc_dict_acc, axis=1, result_type='expand')
+    small['Dictionary Accuracy'] = small.apply(calc_dict_acc, axis=1)
+
+    out_path = f'output/{name}_dict_recall_bleu.csv'
     small.to_csv(out_path)
