@@ -13,8 +13,8 @@ from helpers import *
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 paths = {
-    # GOOGLE: 'output/google_translations.csv',
-    # M2M: 'output/m2m100_translations.csv',
+    GOOGLE: 'output/google_translations.csv',
+    M2M: 'output/m2m100_translations.csv',
     CHATGPT: 'output/gpt_translations.csv'
 }
 
