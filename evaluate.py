@@ -1,4 +1,4 @@
-# Perform automatic metric evaluation on translations of ParaMed sentences from English to Chinese 
+# Perform automatic metric evaluation on translations of ParaMed sentences from English to Chinese
 # with M2M100, Google Translate, and ChatGPT.
 # Metrics calculated: dictionary accuracy, BLEU.
 # Keara Berlin, Kim Welch - 23 April 2023
@@ -18,7 +18,7 @@ paths = {
     CHATGPT: 'output/gpt_translations.csv'
 }
 
-def read_dictionary(path='data/medical_translations_clean.csv'):
+def read_dictionary(path='data/cleansquared.csv'):
     """Read a dictionary csv file with two columns, keys and values, into a Python dictionary object."""
     dictionary = dict()
     with open(path, newline='', encoding='utf-8') as csvfile:
@@ -69,13 +69,13 @@ def tokenize(sentence):
     return cleaned
 
 def bleu(row):
-    """Calculate BLEU score for one row of a pandas dataframe, with columns 
+    """Calculate BLEU score for one row of a pandas dataframe, with columns
         ['English','Chinese','Reference'] where the English is the source sentence,
         Chinese is the machine translated sentence, and Reference is the reference translation."""
     tokenized_hypothesis = tokenize(row['Chinese'])
     tokenized_reference = tokenize(row['Reference'])
     smooth_fn = SmoothingFunction()
-    bleu_score = sentence_bleu([tokenized_reference], 
+    bleu_score = sentence_bleu([tokenized_reference],
                                tokenized_hypothesis,
                                smoothing_function=smooth_fn.method7)
     return bleu_score
@@ -106,9 +106,9 @@ for (name, path) in paths.items():
 
     small = small.merge(references, on=["English"])
 
-    small['BLEU'] = small.apply(bleu, axis=1) 
+    small['BLEU'] = small.apply(bleu, axis=1)
     # small[['Dictionary Accuracy','Terms','Correct Terms']] = small.apply(calc_dict_acc, axis=1, result_type='expand')
     small['Dictionary Accuracy'] = small.apply(calc_dict_acc, axis=1)
 
-    out_path = f'output/{name}_dict_recall_bleu.csv'
+    out_path = f'output/{name}_dict_recall_bleu_nostopword.csv'
     small.to_csv(out_path)
