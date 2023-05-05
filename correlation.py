@@ -7,7 +7,7 @@ from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
 from helpers import GOOGLE, M2M, CHATGPT
 
-suffix = "_dict_recall_bleu.csv"
+suffix = "_dict_acc_bleu.csv"
 input_paths = {
     GOOGLE: f'output/{GOOGLE}{suffix}',
     M2M: f'output/{M2M}{suffix}',
@@ -70,8 +70,8 @@ def plot_pearson(col1, col2, name, aspect, ymax=10.5, small=False):
     plt.xlabel(col1)
     plt.ylabel(col2)
     plt.ylim((0,ymax))
-    plt.title(f"{name}: Dictionary Recall vs {aspect} \nR={pearson.statistic:0.4f} p={pearson.pvalue:0.4f}")
-    plt.savefig(f'plots/{col1}_vs_{col2}_recall.png', dpi=600)
+    plt.title(f"{name}: Dictionary Accuracy vs {aspect} \nR={pearson.statistic:0.4f} p={pearson.pvalue:0.4f}")
+    plt.savefig(f'plots/{col1}_vs_{col2}.png', dpi=600)
     plt.show()
     plt.close()
 
@@ -79,7 +79,6 @@ def plot_pearson(col1, col2, name, aspect, ymax=10.5, small=False):
 # plot_pearson('Dict_Acc_M2M', 'Human Eval M2M', "M2M", 'Fluency')
 # plot_pearson('Dict_Acc_M2M', 'Human Eval Medical M2M', 'M2M', 'Terms', ymax=5.3)
 # plot_pearson('Dict_Acc_GPT', 'Human Eval GPT', 'GPT', 'Fluency/Terms')
-# plot_pearson('Dict_Acc_GPT', 'Human Eval Medical GPT', 'GPT', 'Terms', ymax=5.3)
 
 ymax = 1.25
 plot_pearson('Dict_Acc_Google', 'BLEU_Google', 'Google', 'BLEU', ymax=ymax)
