@@ -6,7 +6,7 @@ from dataset_import import read_into_list, EN_FILENAMES
 from os import environ
 import openai
 import re
-openai.api_key = "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"
+openai.api_key = "" # place key
 output_filepath = "output/gpt_translations.csv"
 
 def get_all_sentences(filepaths):
